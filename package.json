@@ -1,0 +1,23 @@
+{
+  "name": "futzy",
+  "version": "0.1.0",
+  "description": "A fuzzy string matching library",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mattbasta/futzy.git"
+  },
+  "author": "Matt Basta <me@mattbasta.com>",
+  "license": "ISC",
+  "dependencies": {
+    "redis-sorted-set": "^2.0.0",
+    "trie-search": "^1.3.5"
+  },
+  "devDependencies": {
+    "blessed": "^0.1.81",
+    "jest": "^27.0.4"
+  }
+}
