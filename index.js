@@ -5,11 +5,8 @@ const { filterRecordsOnTokens } = require("./tokenFiltering");
 const matchRecordsToTokens = require("./matchRecordsToTokens");
 
 const DEFAULT_OPTIONS = {
-  // indexChunkyStrings: true,
-  // indexTinyStrings: true,
   performRawSearch: false,
   performRawSearchWhenNoResults: true,
-  preindexOneCharacterResults: false,
   resultLimit: 20,
 };
 
@@ -32,14 +29,6 @@ exports.Index = class Index {
     const recordTrie = new TrieSearch([], { splitOnRegEx: false });
     const tokenMapping = {};
     for (const record of this.tokenizedData) {
-      // if (this.options.indexChunkyStrings) {
-      //   if (!(record.normalized in tokenMapping)) {
-      //     tokenTrie.map(record.normalized, record.normalized);
-      //     tokenMapping[record.normalized] = new Set();
-      //   }
-      //   tokenMapping[record.normalized].add(record);
-      // }
-      // if (this.options.indexTinyStrings) {
       for (const token of record.tokens) {
         recordTrie.map(token, record);
         if (!tokenMapping.hasOwnProperty(token)) {
@@ -49,7 +38,6 @@ exports.Index = class Index {
           tokenMapping[token].push(record);
         }
       }
-      // }
     }
 
     for (const token of Object.keys(tokenMapping)) {
@@ -82,11 +70,6 @@ exports.Index = class Index {
 
     // An array of sets. One set per token in the query, with each set containing
     // all records that match that token.
-    // const matchingRecordsPerToken = matchRecordsToTokens(
-    //   matchingTokensOrdered,
-    //   this.index,
-    //   queryTokens
-    // );
     const matchingRecordsPerToken = queryTokens.map((qt) =>
       // new Set(this.index.recordTrie.search(qt))
       this.index.recordTrie.search(qt)
