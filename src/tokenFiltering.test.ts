@@ -1,7 +1,7 @@
-const tokenFiltering = require("./tokenFiltering");
-const tokenizer = require("./tokenizer");
+import * as tokenFiltering from './tokenFiltering';
+import * as tokenizer from './tokenizer';
 
-function matchingTokens(query) {
+function matchingTokens(query: string) {
   return tokenizer.tokenizeString(query).map((x) => new Set([x]));
 }
 

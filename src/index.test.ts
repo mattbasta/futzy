@@ -1,4 +1,4 @@
-const { Index } = require("./index");
+import { Index } from "./index";
 
 const testCorpus = [
   "abc.def",
@@ -12,17 +12,13 @@ const testCorpus = [
 describe("Index", () => {
   describe("indexing", () => {
     it("should produce an appropriate token trie", () => {
-      const {
-        index: { tokenTrie },
-      } = new Index(testCorpus);
+      const { tokenTrie } = new Index(testCorpus).index!;
       expect(tokenTrie.search("d").sort()).toEqual(["def", "defg"]);
       expect(tokenTrie.search("x").sort()).toEqual(["xxx", "xxxx"]);
       expect(tokenTrie.search("a").sort()).toEqual(["abc"]);
     });
     it("should produce an appropriate record trie", () => {
-      const {
-        index: { recordTrie },
-      } = new Index(testCorpus);
+      const { recordTrie } = new Index(testCorpus).index!;
       expect(
         recordTrie
           .search("d")

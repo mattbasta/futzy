@@ -1,6 +1,8 @@
-var SortedSet = require("redis-sorted-set");
+import SortedSet from "redis-sorted-set";
 
-function getBaseScore(record, queryTokenCount) {
+import type { Record } from "./tokenizer";
+
+export function getBaseScore(record: Record, queryTokenCount: number) {
   const recordTokenCount = record.tokens.length;
   return (
     // Unused tokens get a higher score by default
@@ -9,12 +11,11 @@ function getBaseScore(record, queryTokenCount) {
     (1 - 1 / record.original.length)
   );
 }
-exports.getBaseScore = getBaseScore;
 
-exports.filterRecordsOnTokens = function filterRecordsOnTokens(
-  records,
-  matchingTokensFromQuery,
-  limit
+export function filterRecordsOnTokens(
+  records: Array<Record>,
+  matchingTokensFromQuery: Array<Set<string>>,
+  limit: number
 ) {
   const results = new SortedSet();
   let maxScore = 0;
@@ -25,13 +26,11 @@ exports.filterRecordsOnTokens = function filterRecordsOnTokens(
     if (limitReached && baseScore >= maxScore) {
       continue;
     }
-    const score = baseScore + exports.recordMatchesWithScore(
-      record,
-      matchingTokensFromQuery
-    );
-    if (score == null) {
+    const addedScore = recordMatchesWithScore(record, matchingTokensFromQuery);
+    if (addedScore == null) {
       continue;
     }
+    const score = addedScore + baseScore;
     // Don't sort/store records that wouldn't appear in the top N
     if (score > maxScore && limitReached) {
       continue;
@@ -42,16 +41,16 @@ exports.filterRecordsOnTokens = function filterRecordsOnTokens(
     maxScore = Math.max(maxScore, score);
   }
   return results;
-};
+}
 
 // Cost to score for each index of the initial offset
 const INITIAL_OFFSET_SCORE = 0.5;
 // Cost to the score for subsequent misses
 const SUBSEQUENT_OFFSET_SCORE = 1;
 
-exports.recordMatchesWithScore = function recordMatchesWithScore(
-  record,
-  matchingTokensFromQuery
+export function recordMatchesWithScore(
+  record: Record,
+  matchingTokensFromQuery: Array<Set<string>>
 ) {
   const queryTokenCount = matchingTokensFromQuery.length;
   const recordTokenCount = record.tokens.length;
@@ -81,4 +80,4 @@ exports.recordMatchesWithScore = function recordMatchesWithScore(
   }
 
   return null;
-};
+}
