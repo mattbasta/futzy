@@ -4,6 +4,9 @@
   "description": "A fuzzy string matching library",
   "main": "index.js",
   "scripts": {
+    "build": "mkdir -p dist && mkdir -p build && rm -rf dist/* && npm run build:ts && npm run build:rollup",
+    "build:ts": "tsc",
+    "build:rollup": "rollup -c --environment INCLUDE_DEPS,BUILD:production",
     "test": "jest --config jestconfig.json"
   },
   "repository": {
@@ -17,9 +20,11 @@
     "trie-search": "^1.3.5"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
     "@types/jest": "^27.0.1",
     "blessed": "^0.1.81",
     "jest": "^27.0.4",
+    "rollup": "^2.56.2",
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   }

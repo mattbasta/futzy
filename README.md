@@ -25,7 +25,7 @@ const testCorpus = [
   "xxx.abc.defg",
 ];
 const index = new Index(testCorpus, {});
-const results = index.search('a d');
+const results = index.search('a d').map(x => x.original);
 /*
 results ==
 [
@@ -45,6 +45,8 @@ The options object may have these members:
 - `performRawSearch` (Default `false`): If there are fewer results than `resultLimit`, strings in the dataset that contain the search query as a substring are appended to the results, up to `resultLimit`.
 - `performRawSearchWhenNoResults` (Default `true`): Only performs the `performRawSearch` behavior if there would otherwise be no results. This is useful as a backup to support weird queries.
 - `resultLimit` (Default `20`): The maximum number of strings to return in the results. Keeping this value small improves performance for large datasets.
+
+The `search` method takes a string argument (a query). Its return type is `Array<Record>`, where `Record` is in the form `{original: string, normalized: string, tokens: Array<string>}`.
 
 ## Matching
 
